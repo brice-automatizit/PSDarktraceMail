@@ -46,8 +46,14 @@ function Search-DarktraceMail {
         [string]
         $SenderFilter,
         [Parameter(
-            HelpMessage = 'Only return holded',
+            HelpMessage = 'Subject filter (contains)',
             Position = 5
+        )]
+        [string]
+        $subjectFilter,
+        [Parameter(
+            HelpMessage = 'Only return holded',
+            Position = 6
         )]
         [Switch]
         $HoldedOnly
@@ -70,6 +76,14 @@ function Search-DarktraceMail {
             $filtersDT.criteriaList += [PSCustomObject]@{
                 apiFilter = "Header.From.Email"
                 value = $senderFilter
+                operator = "~*" #contains operator
+            }
+        }
+        if ($subjectFilter) {
+            Write-Verbose "Add Subject Filter"
+            $filtersDT.criteriaList += [PSCustomObject]@{
+                apiFilter = "Header.Subject.Subject Value"
+                value = $subjectFilter
                 operator = "~*" #contains operator
             }
         }
